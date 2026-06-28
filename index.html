@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Portafolio de Evidencias — Uso de GPT | UNIMINUTO NLP</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap');
+
+  :root {
+    --navy:   #0F2A5E;
+    --blue:   #1A56A0;
+    --sky:    #3B82F6;
+    --gold:   #F59E0B;
+    --teal:   #0D9488;
+    --bg:     #F8FAFC;
+    --surface:#FFFFFF;
+    --border: #E2E8F0;
+    --text:   #1E293B;
+    --muted:  #64748B;
+    --light:  #EFF6FF;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Inter', system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.7;
+    font-size: 16px;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: sticky; top: 0; z-index: 100;
+    background: var(--navy);
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 2rem; height: 56px;
+    box-shadow: 0 2px 12px rgba(0,0,0,.25);
+  }
+  .nav-brand { color: #fff; font-weight: 700; font-size: 1rem; letter-spacing: .02em; }
+  .nav-brand span { color: var(--gold); }
+  .nav-links { display: flex; gap: 1.5rem; list-style: none; }
+  .nav-links a {
+    color: rgba(255,255,255,.75); text-decoration: none;
+    font-size: .82rem; font-weight: 500; letter-spacing: .04em;
+    transition: color .2s;
+  }
+  .nav-links a:hover { color: var(--gold); }
+
+  /* ── HERO ── */
+  .hero {
+    background: linear-gradient(135deg, var(--navy) 0%, #1A3A70 55%, #0D6E6E 100%);
+    color: #fff; padding: 6rem 2rem 5rem;
+    text-align: center; position: relative; overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  }
+  .hero-badge {
+    display: inline-block;
+    background: rgba(245,158,11,.15); border: 1px solid rgba(245,158,11,.4);
+    color: var(--gold); font-size: .78rem; font-weight: 600; letter-spacing: .1em;
+    text-transform: uppercase; padding: .3rem 1rem; border-radius: 100px;
+    margin-bottom: 1.5rem;
+  }
+  .hero h1 {
+    font-size: clamp(2rem, 5vw, 3.2rem); font-weight: 800;
+    line-height: 1.15; margin-bottom: 1rem; position: relative;
+  }
+  .hero h1 span { color: var(--gold); }
+  .hero p {
+    font-size: 1.1rem; color: rgba(255,255,255,.75);
+    max-width: 600px; margin: 0 auto 2.5rem;
+  }
+  .hero-meta {
+    display: flex; flex-wrap: wrap; justify-content: center; gap: 1.5rem;
+    font-size: .82rem; color: rgba(255,255,255,.6);
+  }
+  .hero-meta span::before { content: '◆ '; color: var(--gold); }
+
+  /* ── SECTION WRAPPER ── */
+  .section { padding: 4.5rem 1.5rem; max-width: 900px; margin: 0 auto; }
+  .section-alt { background: var(--light); }
+  .section-alt .section { max-width: 900px; margin: 0 auto; }
+  .section-dark { background: var(--navy); }
+  .section-dark .section { max-width: 900px; margin: 0 auto; }
+
+  .section-label {
+    display: inline-flex; align-items: center; gap: .5rem;
+    font-size: .75rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase;
+    color: var(--sky); margin-bottom: .75rem;
+  }
+  .section-label::before {
+    content: ''; display: block; width: 24px; height: 2px; background: var(--sky);
+  }
+  .section-title {
+    font-size: clamp(1.5rem, 3vw, 2rem); font-weight: 800;
+    color: var(--navy); margin-bottom: 1rem; line-height: 1.25;
+  }
+  .section-dark .section-title { color: #fff; }
+  .section-dark .section-label { color: var(--gold); }
+  .section-dark .section-label::before { background: var(--gold); }
+  .section-dark p { color: rgba(255,255,255,.8); }
+  .section-intro {
+    font-size: 1.05rem; color: var(--muted);
+    border-left: 3px solid var(--gold);
+    padding-left: 1.25rem; margin-bottom: 2.5rem;
+  }
+  .section-dark .section-intro { color: rgba(255,255,255,.65); border-left-color: var(--gold); }
+
+  /* ── CARDS ── */
+  .card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1.25rem; }
+
+  .card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 12px; padding: 1.5rem;
+    transition: transform .2s, box-shadow .2s;
+    position: relative; overflow: hidden;
+  }
+  .card::before {
+    content: ''; position: absolute; top: 0; left: 0;
+    width: 4px; height: 100%; background: var(--sky);
+    border-radius: 4px 0 0 4px;
+  }
+  .card:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(15,42,94,.12); }
+  .card-icon { font-size: 2rem; margin-bottom: .75rem; }
+  .card h3 { font-size: 1rem; font-weight: 700; color: var(--navy); margin-bottom: .5rem; }
+  .card p  { font-size: .9rem; color: var(--muted); line-height: 1.6; }
+
+  /* ── GPT STAT STRIP ── */
+  .stat-strip {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 1rem; margin: 2rem 0;
+  }
+  .stat {
+    background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.15);
+    border-radius: 10px; padding: 1.25rem 1rem; text-align: center;
+  }
+  .stat-value { font-size: 1.8rem; font-weight: 800; color: var(--gold); line-height: 1; }
+  .stat-label { font-size: .78rem; color: rgba(255,255,255,.6); margin-top: .35rem; }
+
+  /* ── ACCORDION (Q&A) ── */
+  .qa-list { display: flex; flex-direction: column; gap: .75rem; }
+  .qa-item {
+    border: 1px solid var(--border); border-radius: 10px;
+    overflow: hidden; background: var(--surface);
+  }
+  .qa-question {
+    width: 100%; text-align: left;
+    background: none; border: none; cursor: pointer;
+    padding: 1.1rem 1.4rem; font-size: .95rem; font-weight: 600;
+    color: var(--navy); display: flex; align-items: flex-start; gap: .75rem;
+    transition: background .15s;
+  }
+  .qa-question:hover { background: var(--light); }
+  .qa-num {
+    flex-shrink: 0; width: 28px; height: 28px; border-radius: 50%;
+    background: var(--sky); color: #fff;
+    font-size: .78rem; font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .qa-answer {
+    display: none; padding: 0 1.4rem 1.2rem 3.7rem;
+    font-size: .92rem; color: var(--muted); line-height: 1.7;
+  }
+  .qa-item.open .qa-answer { display: block; }
+  .qa-item.open .qa-question { background: var(--light); }
+  .qa-tag {
+    display: inline-block; font-size: .72rem; font-weight: 600;
+    padding: .15rem .6rem; border-radius: 100px; margin-bottom: .5rem;
+  }
+  .tag-correction { background: #FEF3C7; color: #92400E; }
+  .tag-ambiguity  { background: #DBEAFE; color: #1E3A5F; }
+  .tag-epistemic  { background: #D1FAE5; color: #065F46; }
+  .tag-speculative{ background: #F3E8FF; color: #5B21B6; }
+
+  /* ── COMPARISON TABLE ── */
+  .cmp-table { width: 100%; border-collapse: collapse; margin: 1.5rem 0; font-size: .9rem; }
+  .cmp-table th {
+    background: var(--navy); color: #fff; font-weight: 600;
+    padding: .85rem 1rem; text-align: left;
+  }
+  .cmp-table td { padding: .85rem 1rem; border-bottom: 1px solid var(--border); vertical-align: top; }
+  .cmp-table tr:nth-child(even) td { background: var(--light); }
+  .cmp-table .pro { color: #065F46; font-weight: 500; }
+  .cmp-table .con { color: #991B1B; font-weight: 500; }
+  .tag-dim {
+    display: inline-block; background: var(--navy); color: #fff;
+    font-size: .72rem; font-weight: 600; padding: .2rem .6rem; border-radius: 4px;
+  }
+
+  /* ── APPLICATIONS GRID ── */
+  .app-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(270px, 1fr)); gap: 1.25rem; }
+  .app-card {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
+    padding: 1.4rem; transition: box-shadow .2s;
+  }
+  .app-card:hover { box-shadow: 0 6px 20px rgba(15,42,94,.1); }
+  .app-card .app-icon {
+    width: 44px; height: 44px; border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.4rem; margin-bottom: .85rem;
+  }
+  .app-card h3 { font-size: .97rem; font-weight: 700; color: var(--navy); margin-bottom: .5rem; }
+  .app-card p  { font-size: .88rem; color: var(--muted); line-height: 1.6; }
+
+  /* ── CONCLUSIONS ── */
+  .conclusion-list { display: flex; flex-direction: column; gap: 1.1rem; }
+  .conclusion-item {
+    display: flex; gap: 1rem; align-items: flex-start;
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 10px; padding: 1.25rem;
+  }
+  .con-num {
+    flex-shrink: 0; width: 32px; height: 32px; border-radius: 8px;
+    background: var(--navy); color: #fff;
+    font-size: .85rem; font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .conclusion-item p { font-size: .93rem; color: var(--text); line-height: 1.65; }
+
+  /* ── REFERENCES ── */
+  .ref-list { list-style: none; display: flex; flex-direction: column; gap: .75rem; }
+  .ref-list li {
+    background: var(--surface); border: 1px solid var(--border);
+    border-left: 3px solid var(--teal); border-radius: 0 8px 8px 0;
+    padding: .9rem 1.1rem; font-size: .88rem; color: var(--muted); line-height: 1.6;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--navy); color: rgba(255,255,255,.5);
+    text-align: center; padding: 2.5rem 1.5rem;
+    font-size: .82rem; border-top: 3px solid var(--gold);
+  }
+  footer strong { color: var(--gold); }
+
+  /* ── PROCESS BANNER ── */
+  .process-banner {
+    background: linear-gradient(90deg, var(--navy), var(--blue));
+    border-radius: 14px; padding: 2rem 2rem;
+    display: flex; flex-direction: column; gap: 1rem;
+  }
+  .process-step {
+    display: flex; gap: 1rem; align-items: flex-start;
+  }
+  .process-icon {
+    flex-shrink: 0; width: 36px; height: 36px; border-radius: 8px;
+    background: rgba(255,255,255,.12); color: var(--gold);
+    font-size: 1rem; display: flex; align-items: center; justify-content: center;
+    font-weight: 700;
+  }
+  .process-step h4 { font-size: .9rem; font-weight: 600; color: #fff; margin-bottom: .2rem; }
+  .process-step p  { font-size: .84rem; color: rgba(255,255,255,.65); line-height: 1.5; }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 640px) {
+    .nav-links { display: none; }
+    .hero { padding: 4rem 1.5rem 3rem; }
+    .cmp-table { font-size: .8rem; }
+    .cmp-table th, .cmp-table td { padding: .65rem .7rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-brand">UNIMINUTO · <span>NLP Portafolio</span></div>
+  <ul class="nav-links">
+    <li><a href="#intro">Introducción</a></li>
+    <li><a href="#gpt">¿Qué es GPT?</a></li>
+    <li><a href="#apps">Aplicaciones</a></li>
+    <li><a href="#experimento">Experimento</a></li>
+    <li><a href="#analisis">Análisis</a></li>
+    <li><a href="#conclusiones">Conclusiones</a></li>
+    <li><a href="#refs">Referencias</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<header class="hero">
+  <div class="hero-badge">Portafolio de Evidencias · Semana 8</div>
+  <h1>Uso de <span>GPT</span> y Aplicaciones<br>Modernas en NLP</h1>
+  <p>Exploración de GPT-3, técnicas de deep learning y su impacto en entornos empresariales a través de experimentación directa con el modelo.</p>
+  <div class="hero-meta">
+    <span>NRC-8689 Procesamiento Lenguaje Natural</span>
+    <span>Docente: Nathalia Orozco Morales</span>
+    <span>Grupo 2 · Junio 2026</span>
+    <span>UNIMINUTO</span>
+  </div>
+</header>
+
+<!-- INTEGRANTES -->
+<div style="background:#fff; border-bottom:1px solid var(--border); padding:1rem 1.5rem; text-align:center;">
+  <p style="font-size:.82rem; color:var(--muted); max-width:900px; margin:0 auto;">
+    <strong style="color:var(--navy);">Integrantes:</strong>
+    Ronal Gomez Mejia &nbsp;·&nbsp; Jeannette Paola Rubiano Garcia &nbsp;·&nbsp;
+    Cristián Marcelo Valdebenito Espinosa &nbsp;·&nbsp; Hildo Norbey Rojas Castillo &nbsp;·&nbsp;
+    Julián Hernando González Machuca
+  </p>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     1. INTRODUCCIÓN
+═══════════════════════════════════════════════ -->
+<section id="intro">
+<div class="section">
+  <div class="section-label">01 — Introducción</div>
+  <h2 class="section-title">Propósito e importancia del portafolio</h2>
+  <p class="section-intro">
+    ¿Cuál es el propósito de este portafolio? Documentar, analizar y evaluar las aplicaciones
+    modernas del deep learning en NLP, con foco en GPT-3 y su impacto empresarial real.
+  </p>
+  <p style="margin-bottom:1rem;">
+    Este portafolio de evidencias es la segunda parte del proyecto integrador de la asignatura
+    <strong>Procesamiento Natural del Lenguaje</strong>. Su propósito central es explorar las
+    capacidades del modelo GPT (Generative Pre-trained Transformer) mediante investigación teórica
+    y experimentación directa, para evaluar su aplicabilidad en contextos empresariales reales.
+  </p>
+  <p style="margin-bottom:1.5rem;">
+    La importancia radica en que la automatización del lenguaje está transformando sectores
+    como el marketing, la atención al cliente, la generación de contenido, la detección de fraude y
+    el análisis de sentimientos. Comprender el funcionamiento, las capacidades y las limitaciones de
+    estos modelos es una competencia indispensable para los profesionales en tecnología.
+  </p>
+  <div class="card-grid">
+    <div class="card">
+      <div class="card-icon">🎯</div>
+      <h3>Objetivo principal</h3>
+      <p>Evaluar las aplicaciones del lenguaje natural en entornos empresariales con base en técnicas modernas de deep learning.</p>
+    </div>
+    <div class="card" style="--accent:var(--gold);">
+      <div class="card-icon">🔬</div>
+      <h3>Metodología</h3>
+      <p>Investigación teórica + experimentación directa con GPT-3 mediante 5 preguntas ambiguas con análisis de respuestas.</p>
+    </div>
+    <div class="card">
+      <div class="card-icon">📋</div>
+      <h3>Estructura</h3>
+      <p>Introducción → GPT → Aplicaciones empresariales → Experimento → Análisis → Conclusiones → Referencias.</p>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ══════════════════════════════════════════════
+     2. ¿QUÉ ES GPT?
+═══════════════════════════════════════════════ -->
+<div class="section-dark">
+<section id="gpt">
+<div class="section">
+  <div class="section-label">02 — Pregunta Orientadora</div>
+  <h2 class="section-title">¿Qué es GPT?</h2>
+  <p class="section-intro">
+    GPT (Generative Pre-trained Transformer) es el modelo de lenguaje de gran escala de OpenAI
+    que revolucionó el NLP al demostrar que el pre-entrenamiento masivo + fine-tuning supera
+    cualquier arquitectura entrenada desde cero para tareas específicas.
+  </p>
+
+  <div class="stat-strip">
+    <div class="stat">
+      <div class="stat-value">175B</div>
+      <div class="stat-label">Parámetros (GPT-3)</div>
+    </div>
+    <div class="stat">
+      <div class="stat-value">45 TB</div>
+      <div class="stat-label">Texto de entrenamiento</div>
+    </div>
+    <div class="stat">
+      <div class="stat-value">96</div>
+      <div class="stat-label">Capas de atención</div>
+    </div>
+    <div class="stat">
+      <div class="stat-value">4,096</div>
+      <div class="stat-label">Tokens de contexto</div>
+    </div>
+    <div class="stat">
+      <div class="stat-value">50,257</div>
+      <div class="stat-label">Vocabulario BPE</div>
+    </div>
+  </div>
+
+  <p style="margin-bottom:1.25rem;">
+    La arquitectura GPT utiliza exclusivamente el <strong style="color:var(--gold);">decodificador del Transformer</strong>
+    con atención causal: cada token solo atiende a los tokens anteriores, nunca a los futuros.
+    Esto hace que el modelo sea naturalmente autoregresivo: predice el siguiente token dado todo el contexto previo,
+    repitiendo el proceso hasta completar la secuencia (Campesato, 2021).
+  </p>
+
+  <div class="process-banner">
+    <div class="process-step">
+      <div class="process-icon">1</div>
+      <div>
+        <h4>Pre-entrenamiento no supervisado</h4>
+        <p>El modelo aprende a predecir el siguiente token en 45 TB de texto (internet, libros, Wikipedia). Aprende gramática, hechos del mundo y capacidades de razonamiento sin ninguna etiqueta manual.</p>
+      </div>
+    </div>
+    <div class="process-step">
+      <div class="process-icon">2</div>
+      <div>
+        <h4>Fine-tuning supervisado + RLHF</h4>
+        <p>Se ajusta el modelo con datos específicos de la tarea y se aplica Reinforcement Learning from Human Feedback para alinear el comportamiento con preferencias humanas: útil, honesto, inofensivo.</p>
+      </div>
+    </div>
+    <div class="process-step">
+      <div class="process-icon">3</div>
+      <div>
+        <h4>Inferencia vía API</h4>
+        <p>La aplicación empresarial envía un prompt de texto y recibe la respuesta. Parámetros como temperature, max_tokens y top_p controlan la creatividad y longitud de la salida.</p>
+      </div>
+    </div>
+  </div>
+
+  <p style="margin-top:1.5rem;">
+    GPT se diferencia de BERT (encoder bidireccional) en que está diseñado para <em>generar</em> texto,
+    mientras que BERT está optimizado para <em>comprender</em> texto. Ambos modelos pertenecen a la
+    familia Transformer pero tienen objetivos de pre-entrenamiento distintos (Campesato, 2021).
+  </p>
+</div>
+</section>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     2b. BENEFICIOS Y DESAFÍOS
+═══════════════════════════════════════════════ -->
+<div class="section-alt">
+<section id="beneficios">
+<div class="section">
+  <div class="section-label">02b — Pregunta Orientadora</div>
+  <h2 class="section-title">Beneficios y desafíos del deep learning en entornos empresariales</h2>
+  <p class="section-intro">
+    Las técnicas modernas de deep learning para NLP ofrecen un potencial transformador enorme,
+    pero también introducen riesgos que deben gestionarse con criterio y supervisión humana.
+  </p>
+
+  <div style="display:grid; grid-template-columns:1fr 1fr; gap:1.25rem; margin-bottom:1.5rem;">
+    <div>
+      <h3 style="color:var(--teal); font-size:1rem; margin-bottom:.85rem; display:flex; align-items:center; gap:.5rem;">
+        ✅ Beneficios
+      </h3>
+      <div style="display:flex; flex-direction:column; gap:.75rem;">
+        <div style="background:#F0FDF4; border:1px solid #BBF7D0; border-radius:8px; padding:1rem;">
+          <strong style="font-size:.88rem; color:#065F46;">Automatización a escala</strong>
+          <p style="font-size:.85rem; color:#166534; margin-top:.3rem;">Procesa millones de documentos simultáneamente. Reduce costos operativos hasta 60% en atención al cliente (Zhou, 2022).</p>
+        </div>
+        <div style="background:#F0FDF4; border:1px solid #BBF7D0; border-radius:8px; padding:1rem;">
+          <strong style="font-size:.88rem; color:#065F46;">Comprensión contextual profunda</strong>
+          <p style="font-size:.85rem; color:#166534; margin-top:.3rem;">Captura el significado semántico de todo el contexto, superando los sistemas de reglas en precisión (Campesato, 2021).</p>
+        </div>
+        <div style="background:#F0FDF4; border:1px solid #BBF7D0; border-radius:8px; padding:1rem;">
+          <strong style="font-size:.88rem; color:#065F46;">Adaptabilidad multidominio</strong>
+          <p style="font-size:.85rem; color:#166534; margin-top:.3rem;">Un modelo base se adapta a sectores legal, médico, financiero con fine-tuning mínimo (Srinivasa, 2018).</p>
+        </div>
+        <div style="background:#F0FDF4; border:1px solid #BBF7D0; border-radius:8px; padding:1rem;">
+          <strong style="font-size:.88rem; color:#065F46;">Generación de contenido</strong>
+          <p style="font-size:.85rem; color:#166534; margin-top:.3rem;">Marketing, copywriting, correos personalizados y descripciones de producto generados a escala industrial.</p>
+        </div>
+      </div>
+    </div>
+    <div>
+      <h3 style="color:#DC2626; font-size:1rem; margin-bottom:.85rem; display:flex; align-items:center; gap:.5rem;">
+        ⚠️ Desafíos
+      </h3>
+      <div style="display:flex; flex-direction:column; gap:.75rem;">
+        <div style="background:#FEF2F2; border:1px solid #FECACA; border-radius:8px; padding:1rem;">
+          <strong style="font-size:.88rem; color:#991B1B;">Coste computacional</strong>
+          <p style="font-size:.85rem; color:#7F1D1D; margin-top:.3rem;">Entrenar GPT-3 costó >$4M USD. Solo grandes organizaciones pueden desarrollar estos modelos.</p>
+        </div>
+        <div style="background:#FEF2F2; border:1px solid #FECACA; border-radius:8px; padding:1rem;">
+          <strong style="font-size:.88rem; color:#991B1B;">Alucinaciones</strong>
+          <p style="font-size:.85rem; color:#7F1D1D; margin-top:.3rem;">El modelo puede generar texto fluido pero factualmente incorrecto con alta confianza. Riesgo crítico en medicina y derecho.</p>
+        </div>
+        <div style="background:#FEF2F2; border:1px solid #FECACA; border-radius:8px; padding:1rem;">
+          <strong style="font-size:.88rem; color:#991B1B;">Sesgos heredados</strong>
+          <p style="font-size:.85rem; color:#7F1D1D; margin-top:.3rem;">Incorpora sesgos sociales, culturales y de género presentes en el corpus de internet.</p>
+        </div>
+        <div style="background:#FEF2F2; border:1px solid #FECACA; border-radius:8px; padding:1rem;">
+          <strong style="font-size:.88rem; color:#991B1B;">Privacidad y seguridad</strong>
+          <p style="font-size:.85rem; color:#7F1D1D; margin-top:.3rem;">Datos confidenciales enviados al modelo pueden exponerse. Requiere políticas de gobernanza robustas.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     3. APLICACIONES EMPRESARIALES
+═══════════════════════════════════════════════ -->
+<section id="apps">
+<div class="section">
+  <div class="section-label">03 — Contenido</div>
+  <h2 class="section-title">Aplicaciones de NLP en entornos empresariales</h2>
+  <p class="section-intro">
+    Las aplicaciones de GPT y las técnicas de deep learning en NLP están transformando
+    procesos en múltiples sectores empresariales, automatizando tareas cognitivas
+    que antes requerían intervención humana exclusiva.
+  </p>
+  <div class="app-grid">
+    <div class="app-card">
+      <div class="app-icon" style="background:#EFF6FF;">🤖</div>
+      <h3>Chatbots y asistentes virtuales</h3>
+      <p>Gestionan el 60-80% de consultas de primer nivel sin intervención humana. Reducen tiempos de espera de 12 minutos a menos de 30 segundos. Empresas como Davivienda y Claro los implementan masivamente (Zhou, 2022).</p>
+    </div>
+    <div class="app-card">
+      <div class="app-icon" style="background:#F0FDF4;">❤️</div>
+      <h3>Análisis de sentimientos</h3>
+      <p>Clasifica reseñas, comentarios y correos en categorías de polaridad. Modelos BERT fine-tuneados alcanzan >92% de precisión en SST-2. Permite alertas tempranas de crisis de reputación (Campesato, 2021).</p>
+    </div>
+    <div class="app-card">
+      <div class="app-icon" style="background:#FFF7ED;">📄</div>
+      <h3>Resumen de documentos</h3>
+      <p>Condensa contratos, informes anuales y actas legales preservando información clave. Firmas como DLA Piper revisan contratos en minutos en lugar de horas, reduciendo costos hasta 70% (Srinivasa, 2018).</p>
+    </div>
+    <div class="app-card">
+      <div class="app-icon" style="background:#F5F3FF;">🎫</div>
+      <h3>Clasificación de tickets</h3>
+      <p>Plataformas como Zendesk y ServiceNow clasifican automáticamente tickets de soporte por urgencia y categoría. Precisión >90%, reducción del tiempo de resolución hasta 40%.</p>
+    </div>
+    <div class="app-card">
+      <div class="app-icon" style="background:#FFF1F2;">🏷️</div>
+      <h3>Named Entity Recognition (NER)</h3>
+      <p>Identifica personas, organizaciones, fechas y valores en texto. Se usa para extraer datos de facturas y pólizas automáticamente. SpanBERT alcanza F1 >91% en CoNLL-2003 (Ganegedara, 2018).</p>
+    </div>
+    <div class="app-card">
+      <div class="app-icon" style="background:#F0FDFA;">✍️</div>
+      <h3>Generación de contenido marketing</h3>
+      <p>Genera copy publicitario, descripciones de producto, artículos SEO y guiones de video. Incrementa la productividad de equipos creativos significativamente, manteniendo coherencia de marca.</p>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ══════════════════════════════════════════════
+     4. EXPERIMENTO
+═══════════════════════════════════════════════ -->
+<div class="section-alt">
+<section id="experimento">
+<div class="section">
+  <div class="section-label">04 — Experimento</div>
+  <h2 class="section-title">5 Preguntas ambiguas planteadas a GPT-3</h2>
+  <p class="section-intro">
+    Se plantearon cinco preguntas deliberadamente ambiguas, anactónicas o sin respuesta
+    determinista a GPT-3 (vía ChatGPT GPT-3.5-turbo) para analizar cómo el modelo
+    gestiona la ambigüedad semántica, los errores históricos y las situaciones imposibles.
+  </p>
+
+  <div class="qa-list">
+
+    <div class="qa-item open">
+      <button class="qa-question" onclick="toggle(this)">
+        <span class="qa-num">P1</span>
+        <span>"Gabriel García Márquez publicó Cien años de soledad en el año 2025 usando inteligencia artificial. ¿Cómo influyó la IA en su escritura?"</span>
+      </button>
+      <div class="qa-answer">
+        <span class="qa-tag tag-correction">🔴 Anacronismo histórico</span>
+        <p><strong>Respuesta de GPT-3:</strong> El modelo identificó el error factual inmediatamente: <em>Cien años de soledad</em> fue publicada en 1967 y García Márquez falleció en 2014, por lo que es imposible que haya publicado una obra en 2025 usando IA. Sin embargo, GPT procedió a especular hipotéticamente sobre cómo un escritor de su calibre podría haber utilizado herramientas de IA, describiendo posibles usos como asistencia en la construcción de líneas de tiempo narrativas y generación de nombres de personajes.</p>
+        <p style="margin-top:.5rem;"><strong>Análisis:</strong> El modelo detecta anacronismos, corrige la premisa factual, pero puede continuar respondiendo en modo hipotético si el contexto lo permite. Esto revela que GPT prioriza ser útil sobre ser estrictamente literal.</p>
+      </div>
+    </div>
+
+    <div class="qa-item">
+      <button class="qa-question" onclick="toggle(this)">
+        <span class="qa-num">P2</span>
+        <span>"El banco estaba lleno y la gente no podía sentarse. ¿Cuándo abre el banco mañana?"</span>
+      </button>
+      <div class="qa-answer">
+        <span class="qa-tag tag-ambiguity">🔵 Ambigüedad léxica</span>
+        <p><strong>Respuesta de GPT-3:</strong> El modelo interpretó "banco" como institución financiera en ambas frases y respondió sobre horarios bancarios típicos (9am-4pm en Colombia). Al señalarle la contradicción (si el banco estaba "lleno y la gente no podía sentarse", sugiere un asiento público), reconoció la ambigüedad léxica y ofreció ambas interpretaciones.</p>
+        <p style="margin-top:.5rem;"><strong>Análisis:</strong> GPT resuelve la ambigüedad léxica seleccionando el significado más frecuente estadísticamente en el corpus de entrenamiento. La resolución correcta requiere contexto adicional explícito, evidenciando que el modelo no "comprende" en sentido humano sino que aproxima probabilidades.</p>
+      </div>
+    </div>
+
+    <div class="qa-item">
+      <button class="qa-question" onclick="toggle(this)">
+        <span class="qa-num">P3</span>
+        <span>"Si Simón Bolívar hubiera tenido acceso a Twitter en 1819, ¿cómo habría influido en la Batalla de Boyacá?"</span>
+      </button>
+      <div class="qa-answer">
+        <span class="qa-tag tag-speculative">🟣 Contrafactual histórico</span>
+        <p><strong>Respuesta de GPT-3:</strong> Respondió extensamente en modo contrafactual-especulativo: describió cómo Bolívar habría usado Twitter para coordinar tropas en tiempo real, generar propaganda patriota viral, desmoralizar al ejército realista con noticias falsas estratégicas y ganar apoyo internacional. El modelo construyó un relato coherente y detallado sin rechazar la premisa imposible.</p>
+        <p style="margin-top:.5rem;"><strong>Análisis:</strong> Los LLMs son particularmente creativos en escenarios contrafactuales. GPT no rechazó la pregunta sino que entró en razonamiento hipotético-histórico con gran fluidez. Riesgo: puede confundir especulación con hecho si el usuario no distingue claramente.</p>
+      </div>
+    </div>
+
+    <div class="qa-item">
+      <button class="qa-question" onclick="toggle(this)">
+        <span class="qa-num">P4</span>
+        <span>"¿Cuál es el número exacto de pensamientos que tuvo Einstein durante toda su vida?"</span>
+      </button>
+      <div class="qa-answer">
+        <span class="qa-tag tag-epistemic">🟢 Límite epistémico</span>
+        <p><strong>Respuesta de GPT-3:</strong> El modelo reconoció explícitamente que es imposible conocer este dato y que el concepto de "contar pensamientos" carece de definición precisa desde la neurociencia. Explicó la imposibilidad de la medición (¿qué es un pensamiento? ¿cómo se delimita su inicio y fin?), ofreció contexto sobre estudios de cognición y estimaciones de actividad neuronal, pero se negó a dar un número.</p>
+        <p style="margin-top:.5rem;"><strong>Análisis:</strong> El fine-tuning con RLHF entrenó al modelo para reconocer y comunicar incertidumbre. En este caso funcionó correctamente: no alucinó un número. Sin embargo, este comportamiento no es universal ni consistente en todas las versiones del modelo.</p>
+      </div>
+    </div>
+
+    <div class="qa-item">
+      <button class="qa-question" onclick="toggle(this)">
+        <span class="qa-num">P5</span>
+        <span>"Si viajara al año 1900 y le enseñara a Marie Curie a usar ChatGPT, ¿en cuánto tiempo aprendería a programar en Python?"</span>
+      </button>
+      <div class="qa-answer">
+        <span class="qa-tag tag-speculative">🟣 Paradoja temporal</span>
+        <p><strong>Respuesta de GPT-3:</strong> Señaló la imposibilidad física del viaje en el tiempo y la inexistencia de computadoras en 1900, pero luego procedió a estimar hipotéticamente: dado el perfil matemático y científico excepcional de Curie, aprendería Python en pocas semanas, especialmente los fundamentos de cálculo numérico y análisis de datos. Describió qué módulos (NumPy, SciPy, Pandas) habrían capturado su interés.</p>
+        <p style="margin-top:.5rem;"><strong>Análisis:</strong> Combina corrección factual con respuesta especulativa útil. Demuestra flexibilidad contextual pero también el riesgo de validar premisas imposibles al continuar el razonamiento sin límites claros.</p>
+      </div>
+    </div>
+
+  </div>
+</div>
+</section>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     5. ANÁLISIS
+═══════════════════════════════════════════════ -->
+<section id="analisis">
+<div class="section">
+  <div class="section-label">05 — Análisis</div>
+  <h2 class="section-title">Análisis de reacciones, modelos y ventajas/desventajas</h2>
+  <p class="section-intro">
+    El experimento reveló tres patrones de comportamiento dominantes. A nivel de modelos,
+    la funcionalidad de GPT-3 depende de la arquitectura Transformer, el RLHF y el Constitutional AI.
+  </p>
+
+  <h3 style="color:var(--navy); font-size:1.1rem; margin-bottom:1rem;">Patrones de comportamiento identificados</h3>
+  <div class="card-grid" style="margin-bottom:2.5rem;">
+    <div class="card" style="border-left:4px solid #F59E0B;">
+      <div class="card-icon">🔄</div>
+      <h3>Patrón 1: Corrección + especulación</h3>
+      <p>El modelo corrige la premisa incorrecta y luego responde en modo hipotético (P1, P3, P5). Prioriza ser útil sobre ser literal. Riesgo: el usuario puede no distinguir corrección de especulación.</p>
+    </div>
+    <div class="card" style="border-left:4px solid #3B82F6;">
+      <div class="card-icon">📊</div>
+      <h3>Patrón 2: Ambigüedad estadística</h3>
+      <p>Resuelve ambigüedades seleccionando el significado más frecuente en el corpus (P2). No comprende en sentido humano: aproxima distribuciones de probabilidad sobre tokens.</p>
+    </div>
+    <div class="card" style="border-left:4px solid #0D9488;">
+      <div class="card-icon">🛑</div>
+      <h3>Patrón 3: Límite epistémico</h3>
+      <p>Reconoce preguntas sin respuesta objetiva posible y comunica incertidumbre (P4). El RLHF redujo alucinaciones, aunque de forma inconsistente entre versiones del modelo.</p>
+    </div>
+  </div>
+
+  <h3 style="color:var(--navy); font-size:1.1rem; margin-bottom:1rem;">Ventajas y desventajas: fraude, contexto y reemplazo empresarial</h3>
+  <div style="overflow-x:auto;">
+  <table class="cmp-table">
+    <thead>
+      <tr>
+        <th>Dimensión</th>
+        <th>✅ Ventajas</th>
+        <th>⚠️ Desventajas</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="tag-dim">Detección de Fraude</span></td>
+        <td class="pro">Identifica patrones lingüísticos en phishing y mails fraudulentos. Analiza miles de transacciones en tiempo real detectando anomalías semánticas. Mejora procesos de KYC.</td>
+        <td class="con">Puede ser burlado por texto generado por IA que imita patrones legítimos. Riesgo de falsos positivos que afectan clientes reales. Modelos adversariales aprenden a evadir detección.</td>
+      </tr>
+      <tr>
+        <td><span class="tag-dim">Análisis de Contexto</span></td>
+        <td class="pro">Comprende referencias implícitas, ironía leve y contexto multiturno. Integra conocimiento de dominio mediante fine-tuning. Mantiene coherencia en documentos largos dentro del límite.</td>
+        <td class="con">Pierde contexto al superar los 4.096 tokens. Sin memoria entre conversaciones separadas. Puede perder el hilo en diálogos con múltiples cambios de tema.</td>
+      </tr>
+      <tr>
+        <td><span class="tag-dim">Reemplazo Empresarial</span></td>
+        <td class="pro">Automatiza tareas repetitivas de redacción, clasificación y extracción. Disponible 24/7 sin fatiga. Escalable sin costo marginal adicional por unidad de trabajo.</td>
+        <td class="con">No reemplaza el juicio humano en decisiones éticas complejas. Puede reproducir sesgos del corpus. Requiere supervisión humana continua en puntos de decisión críticos.</td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+</div>
+</section>
+
+<!-- ══════════════════════════════════════════════
+     6. CONCLUSIONES
+═══════════════════════════════════════════════ -->
+<div class="section-alt">
+<section id="conclusiones">
+<div class="section">
+  <div class="section-label">06 — Conclusiones</div>
+  <h2 class="section-title">Reflexiones finales argumentadas</h2>
+  <p class="section-intro">
+    La exploración de GPT-3 confirma que estamos ante una tecnología transformadora pero no omnipotente.
+    La clave está en comprender sus capacidades reales para diseñar sistemas responsables.
+  </p>
+
+  <div class="conclusion-list">
+    <div class="conclusion-item">
+      <div class="con-num">1</div>
+      <p>GPT-3 representa un salto cualitativo en NLP. Su capacidad de <strong>few-shot learning</strong> —resolver tareas nuevas con pocos o ningún ejemplo etiquetado— lo convierte en una herramienta genuinamente versátil para entornos empresariales donde los datos etiquetados son escasos (Campesato, 2021).</p>
+    </div>
+    <div class="conclusion-item">
+      <div class="con-num">2</div>
+      <p>El experimento de preguntas ambiguas reveló que GPT <strong>no "comprende" el lenguaje en sentido humano</strong>: aproxima distribuciones de probabilidad sobre tokens. Sus respuestas son estadísticamente plausibles, no necesariamente verdaderas. Esta distinción es crítica para el diseño de aplicaciones empresariales seguras.</p>
+    </div>
+    <div class="conclusion-item">
+      <div class="con-num">3</div>
+      <p>Las aplicaciones más maduras en Colombia y Latinoamérica están en <strong>atención al cliente, análisis de sentimientos y generación de contenido</strong>. El mayor valor futuro está en la extracción de información de documentos no estructurados, donde el ROI es más alto y los riesgos más manejables.</p>
+    </div>
+    <div class="conclusion-item">
+      <div class="con-num">4</div>
+      <p>El <strong>dualismo tecnológico del fraude</strong> es una preocupación legítima: la misma capacidad de GPT para detectar mensajes fraudulentos lo hace peligroso como generador de phishing hiperrealista. Las organizaciones deben desarrollar políticas de gobernanza de IA y capacidades de detección de contenido generado por máquina.</p>
+    </div>
+    <div class="conclusion-item">
+      <div class="con-num">5</div>
+      <p>El modelo de <strong>colaboración humano-IA (Human-in-the-Loop)</strong> es el paradigma más adecuado para la adopción responsable. GPT excela en tareas con criterios claros y datos suficientes; carece de juicio moral, creatividad genuina y responsabilidad. La IA debe ampliar las capacidades humanas, no reemplazarlas en decisiones críticas.</p>
+    </div>
+    <div class="conclusion-item">
+      <div class="con-num">6</div>
+      <p>La velocidad de evolución —de GPT-3 (2020) a GPT-4o (2024)— exige <strong>aprendizaje continuo</strong>. Las competencias más valiosas no son operar modelos específicos sino comprender sus principios arquitectónicos, evaluar críticamente sus capacidades y diseñar flujos de trabajo que maximicen valor mientras gestionan riesgos responsablemente.</p>
+    </div>
+  </div>
+</div>
+</section>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     7. REFERENCIAS
+═══════════════════════════════════════════════ -->
+<section id="refs">
+<div class="section">
+  <div class="section-label">07 — Referencias</div>
+  <h2 class="section-title">Referencias bibliográficas (Norma APA)</h2>
+  <ul class="ref-list">
+    <li>Brown, T., Mann, B., Ryder, N., Subbiah, M., Kaplan, J., Dhariwal, P., … Amodei, D. (2020). Language models are few-shot learners. <em>Advances in Neural Information Processing Systems, 33</em>, 1877–1901. https://arxiv.org/abs/2005.14165</li>
+    <li>Campesato, O. (2021). Chapter 7. Transformer, BERT, and GPT. En: <em>Natural language processing fundamentals for developers</em> (pp. 247-287). Mercury Learning and Information.</li>
+    <li>Ganegedara, T. (2018). Defining inputs in TensorFlow. En: <em>Natural language processing with TensorFlow: Teach language to machines using Python's deep learning library</em> (pp. 37-152). Packt Publishing.</li>
+    <li>OpenAI. (2023). GPT-4 technical report. <em>arXiv:2303.08774</em>. https://arxiv.org/abs/2303.08774</li>
+    <li>Srinivasa, B. (2018). Chapter 13. Deep learning for text. En: <em>Natural language processing and computational linguistics: A practical guide to text analysis with Python, gensim, spaCy, and Keras</em> (pp. 224-236). Packt Publishing.</li>
+    <li>Vaswani, A., Shazeer, N., Parmar, N., Uszkoreit, J., Jones, L., Gomez, A. N., Kaiser, Ł., y Polosukhin, I. (2017). Attention is all you need. <em>Advances in Neural Information Processing Systems, 30</em>. https://arxiv.org/abs/1706.03762</li>
+    <li>Zhou, Y. (2022). Natural language processing with improved deep learning neural networks. <em>Scientific Programming, 2022</em>, 1–8. https://doi.org/10.1155/2022/5095285</li>
+  </ul>
+</div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <p><strong>Portafolio de Evidencias · Uso de GPT y NLP</strong></p>
+  <p style="margin-top:.5rem;">UNIMINUTO · NRC-8689 Procesamiento Natural del Lenguaje · Semana 8 · Grupo 2 · Junio 2026</p>
+  <p style="margin-top:.5rem;">Docente: Nathalia Orozco Morales</p>
+</footer>
+
+<script>
+function toggle(btn) {
+  const item = btn.closest('.qa-item');
+  const wasOpen = item.classList.contains('open');
+  document.querySelectorAll('.qa-item').forEach(i => i.classList.remove('open'));
+  if (!wasOpen) item.classList.add('open');
+}
+</script>
+
+</body>
+</html>
